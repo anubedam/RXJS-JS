@@ -1,7 +1,7 @@
 const { Observable, of, fromEvent, from, interval, range,
        timer, throwError, Subject} = rxjs;
 const { pipe, map, filter, distinctUntilChanged, tap,
-        debounce, throttle } = rxjs.operators;
+        debounceTime, throttleTime } = rxjs.operators;
 
 const boton = document.querySelector("#boton");
 
@@ -36,9 +36,9 @@ const boton = document.querySelector("#boton");
  *     + distinctUntilChanged -> Devuelve el elemento si es distinto del anterior.
  *     + tap (para debugging) -> Para poder ver que tenemos en cada paso (como 
  *        si fuera un display de Cobol). 
- *     + debounce => Solo emite un elemento de un Observable si ha pasado un
+ *     + debounceTime => Solo emite un elemento de un Observable si ha pasado un
  *        período de tiempo en particular sin que emita otro elemento.
- *     + throttle => Emite un valor desde el Observable de origen, luego ignora
+ *     + throttleTime => Emite un valor desde el Observable de origen, luego ignora
  *        los valores de origen subsiguientes durante un período determinado por 
  *        otro Observable, luego repite este proceso.
  *
@@ -185,17 +185,20 @@ perros.pipe(
   filter(perro => perro === "Cooper")    
 ).subscribe(perro => console.log("Perro: "+perro));
 */
-
-//2e.- debounce - Sólo emite un elemento de un Observable si ha pasado un período de
+//2e.- debounceTime - Sólo emite un elemento de un Observable si ha pasado un período de
 //   tiempo en particular sin que emita otro elemento.
 
 const input = document.querySelector("input");  
-const observable = Rx.Observable.fromEvent(input, "keyup");
+const observable = fromEvent(input, "keyup");
 
-observable.debounceTime(3000).subscribe(event => console.log(event));
+//observable.pipe(
+//  debounceTime(3000)
+//).subscribe(event => console.log(event));
 
 //2f.- throottleTime - Emite un valor desde el Observable de origen, luego ignora
 //        los valores de origen subsiguientes durante un período determinado por 
 //        otro Observable, luego repite este proceso
 
-//observable.throttleTime(1000).subscribe(event => console.log(event));
+observable.pipe(
+  throttleTime(1000)
+).subscribe(event => console.log(event));
