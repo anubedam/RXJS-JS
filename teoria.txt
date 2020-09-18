@@ -1,0 +1,75 @@
+/*RXJS:
+* =====
+* En la programación reactiva observamos los flujos de datos asíncronos (que pueden contener
+* eventos, mensajes, llamadas, fallos etc producidos a lo largo del tiempo) y reaccionamos 
+* cuando se emite un valor a través de los mismos.
+* 
+* RxJS es una biblioteca para componer programas asincrónicos y basados ​​en eventos mediante
+* el uso de secuencias observables. Patrones que combina ReactiveX:
+*
+* - Patrón Observer.
+* - Patrón Iterator.
+* - Programación funcional con colecciones.
+*
+* Conceptos:
+*
+*  - Observable : Colección invocable de valores o eventos futuros.
+*  - Observer: Colección de devoluciones de llamada que sabe cómo escuchar los valores 
+*    entregados por el Observable. "Los que observan al observable".
+*  - Subscription: Ejecución de un Observable. Es también útil para cancelar la ejecución.
+*  - Operators: Funciones puras que permiten tratar las colecciones con operaciones 
+*     (como map, filter, concat, reduce, etc). Reciben un observable y devuelven otro.
+*  - Subject: Equivalente a un EventEmitter, y la única forma de multidifusión de un valor
+*     o evento a múltiples observadores.
+*  - Schedulers: Son despachadores centralizados para controlar la concurrencia, que nos 
+*     permiten coordinar cuándo se realizan los cálculos (como setTimeout).
+* 
+*  subscribe() -> devuelve una suscripción al observable, y éste comienza a publicar valores.
+*  unsubscribe() -> para cancelar la suscripción al observable.
+*
+*  + Funciones del observador: 
+*    - next     -> Gestiona el nuevo valor recibido (obligatorio).
+*    - error    -> Gestiona el error recibido, de haberlo.  
+*    - complete -> Hace algo cuando se completa la emision.
+*/
+/* **************************************************** 
+   *         CREACION DE OBSERVABLES
+* ****************************************************/
+
+// 1.- Creación de un observable a partir de un evento
+//     fromEvent(elemento, "evento");
+//
+// Del objeto observable sólo es obligatorio el next
+const observador = {  
+    next: function(valor) {  
+       console.log(valor);  
+    },  
+    error: function(err) {  
+       console.error(err);  
+    },  
+    complete: function() {  
+       console.log("Completado");  
+    }  
+};
+
+const observable = fromEvent(boton, "click");    
+observable.subscribe(observador); 
+
+// 2.- Suscripción y desuscripción a un observable
+const observable = fromEvent(boton, "click");
+const suscripcion = observable.subscribe(evento => {
+    console.log(evento);
+});
+// Nos desuscribimos y dejamos de recibir valores. Como es asíncrono, no espera a que
+//  demos al primer click.
+suscripcion.unsubscribe();
+*/
+/*************************************************
+ *     MANEJO DE OBSERVABLES CON OPERADORES
+ *************************************************
+const observable = of(1, 2, 3)    
+      .pipe(
+         map(valor => valor * valor)
+      );  
+observable.subscribe(x => console.log(x));
+*/
