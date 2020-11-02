@@ -31,6 +31,14 @@
 *    - next     -> Gestiona el nuevo valor recibido (obligatorio).
 *    - error    -> Gestiona el error recibido, de haberlo.  
 *    - complete -> Hace algo cuando se completa la emision.
+*
+*  COSAS A TENER EN CUENTA:
+*  ------------------------
+*  - JavaScript NO espera a que se ejecuten las sentencias asíncronas.
+*  - Si hacemos Complete, ignora los siguientes valores emitidos. 
+*  - Si se produce un error (suscriptor.error): 
+*    + No se siguen emitiendo los valores que hubiera después.
+*    + No se realiza el complete del observable.
 */
 /* **************************************************** 
    *         CREACION DE OBSERVABLES
@@ -72,4 +80,49 @@ const observable = of(1, 2, 3)
          map(valor => valor * valor)
       );  
 observable.subscribe(x => console.log(x));
+*/
+/*************************************************
+ *     CREACION MANUAL DE OBSERVABLES
+ *************************************************
+   const obsNumeros$ = new Observable(suscriptor => {
+      // Emito el valor "hola"
+      suscriptor.next('hola');
+      // Emito el valor "mundo"
+      suscriptor.next('mundo');
+
+      // Emito un error
+      // suscriptor.error("¡Atención, se ha producido un error!")
+
+      // Emito el valor "Qué tal?"
+      suscriptor.next("Qué tal?");
+      
+      // Después de tres segundo finaliza
+      setTimeout(() => {
+        suscriptor.complete();
+        suscriptor.next("Después del complete");
+      }, 3000);   
+
+      console.log("Al final del observable");
+   });
+
+   // Resultado: (Si no incluimos la línea del error) 
+   //   hola
+   //   mundo
+   //   Qué tal?
+   //   Al final del observable -> No espera al timeout
+   //   El observable finalizó -> Ignora lo del después del complete
+   //
+
+   // Resultado: (Si incluimos la línea de error)
+   //   hola
+   //   mundo
+   //   ¡Atención, se ha producido un error!
+   //   Al final del observable -> No sigue emitiendo valores  
+   //     después del error, ni tampoco hace el complete. 
+   //
+   obsNumeros$.subscribe(
+       (res) => console.log(res),
+       (error) => console.log(error),
+       () => console.log("El observable finalizó")
+   );
 */
